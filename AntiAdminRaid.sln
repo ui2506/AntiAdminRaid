@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiAdminRaid", "AntiAdminRaid\AntiAdminRaid.csproj", "{E88D0A9B-D6A8-45AF-A82B-C5632C1E00EA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E88D0A9B-D6A8-45AF-A82B-C5632C1E00EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E88D0A9B-D6A8-45AF-A82B-C5632C1E00EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E88D0A9B-D6A8-45AF-A82B-C5632C1E00EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E88D0A9B-D6A8-45AF-A82B-C5632C1E00EA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7FABDCDA-7B63-4F4E-B8A7-01876F61808B}
+	EndGlobalSection
+EndGlobal
