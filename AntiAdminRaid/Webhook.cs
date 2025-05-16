@@ -1,18 +1,19 @@
-﻿using Exiled.API.Features;
-using System.Net.Http;
-using System.Text;
-
-namespace AntiAdminRaid
+﻿namespace AntiAdminRaid
 {
-    public class Webhook
+    using Exiled.API.Features;
+    using System.Net.Http;
+    using System.Text;
+
+    internal static class Webhook
     {
-        public async void SendWebhook(string webhookUrl, string message)
+        internal static async void SendWebhook(string webhookUrl, string message)
         {
             if (string.IsNullOrEmpty(webhookUrl))
             {
                 Log.Error("Webhook url is empty");
                 return;
             }
+
             using (var httpClient = new HttpClient())
             {
                 var payload = new

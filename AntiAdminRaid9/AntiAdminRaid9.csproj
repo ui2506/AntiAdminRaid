@@ -95,8 +95,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BanCommandPatch.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="EventHandlers\PlayerEvents.cs" />
+    <Compile Include="Patches\BanCommandPatch.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Webhook.cs" />

@@ -1,81 +1,58 @@
-﻿using Exiled.API.Features;
-using Exiled.Events.EventArgs.Player;
-using HarmonyLib;
-using MEC;
-using System;
-using System.Collections.Generic;
-
-namespace AntiAdminRaid
+﻿namespace AntiAdminRaid
 {
+    using AntiAdminRaid.EventHandlers;
+    using Exiled.API.Features;
+    using HarmonyLib;
+    using System.Collections.Generic;
+
     public class Plugin : Plugin<Config>
     {
-        public override string Prefix => "AntiRaid";
-        public override string Name => "AntiRaid";
+        public override string Prefix => "AntiAdminRaid";
+        public override string Name => "AntiAdminRaid";
         public override string Author => "angelseraphim.";
-        public override Version Version => new Version(1, 0, 0);
 
-        public static Plugin plugin;
-        public static Harmony harmony;
-        public static Webhook webhook;
+        internal static readonly Dictionary<Player, int> AdminBanCount = new Dictionary<Player, int>();
+        internal static readonly Dictionary<Player, List<string>> PlayerUserId = new Dictionary<Player, List<string>>();
+        internal static readonly Dictionary<Player, List<string>> PlayerIpAdress = new Dictionary<Player, List<string>>();
 
-        private readonly Dictionary<Player, int> AdminBanCount = new Dictionary<Player, int>();
-        private readonly Dictionary<Player, List<string>> PlayerUserId = new Dictionary<Player, List<string>>();
-        private readonly Dictionary<Player, List<string>> PlayerIpAdress = new Dictionary<Player, List<string>>();
+        internal static Config config;
+
+        private PlayerEvents playerEvents;
+        private Harmony harmony;
 
         public override void OnEnabled()
         {
-            plugin = this;
-            webhook = new Webhook();
+            config = Config;
             harmony = new Harmony("AntiRaid");
-            Exiled.Events.Handlers.Player.Banning += OnBanning;
-            Exiled.Events.Handlers.Server.RestartingRound += OnRestartingRound;
-            base.OnEnabled();
+            playerEvents = new PlayerEvents();
+
             harmony.PatchAll();
+            playerEvents.Register();
+
+            base.OnEnabled();
         }
+
         public override void OnDisabled ()
         {
-            plugin = null;
-            webhook = null;
-            Exiled.Events.Handlers.Player.Banning -= OnBanning;
-            Exiled.Events.Handlers.Server.RestartingRound -= OnRestartingRound;
-            base.OnDisabled();
             harmony.UnpatchAll();
-        }
-        private void OnRestartingRound() => AdminBanCount.Clear();
+            playerEvents.Unregister();
 
-        private void OnBanning(BanningEventArgs ev)
+            config = null;
+            harmony = null;
+            playerEvents = null;
+
+            base.OnDisabled();
+        }
+
+        public override void OnReloaded()
         {
-            if (ev.Player.IsHost)
-                return;
+            OnDisabled();
+            OnEnabled();
 
-            if (!AdminBanCount.ContainsKey(ev.Player))
-                AdminBanCount.Add(ev.Player, 0);
-
-            AdminBanCount[ev.Player]++;
-
-            if (AdminBanCount[ev.Player] >= Config.BanCount)
-            {
-                if (Config.UnBanPlayers)
-                    UnbanPlayers(ev.Player);
-
-                ev.Player.Ban(Config.RaiderBanDuration * 86400, Config.RaidReason);
-
-                webhook.SendWebhook(
-                    Config.WebHook,
-                    Config.WebHookText
-                        .Replace("%nick%", ev.Player.Nickname)
-                        .Replace("%steam%", ev.Player.UserId)
-                        .Replace("%ip%", ev.Player.IPAddress)
-                );
-            }
-
-            UpdatePlayerInfo(PlayerUserId, ev.Player, ev.Target.UserId);
-            UpdatePlayerInfo(PlayerIpAdress, ev.Player, ev.Target.IPAddress);
-
-            Timing.CallDelayed(Config.BanCountKD, () => AdminBanCount[ev.Player]--);
+            base.OnReloaded();
         }
 
-        private void UpdatePlayerInfo(Dictionary<Player, List<string>> dict, Player player, string info)
+        internal static void UpdatePlayerInfo(Dictionary<Player, List<string>> dict, Player player, string info)
         {
             if (!dict.ContainsKey(player))
                 dict[player] = new List<string>();
@@ -83,21 +60,11 @@ namespace AntiAdminRaid
             dict[player].Add(info);
         }
 
-        private void UnbanPlayers(Player player)
+        internal static void UnbanPlayers(List<string> list, BanHandler.BanType banType)
         {
-            if (PlayerUserId.TryGetValue(player, out List<string> idList))
+            foreach (string item in list)
             {
-                foreach(string id in idList)
-                {
-                    Server.ExecuteCommand($"/unban id {id}");
-                }
-            }
-            if (PlayerIpAdress.TryGetValue(player, out List<string> ipList))
-            {
-                foreach (string ip in ipList)
-                {
-                    Server.ExecuteCommand($"/unban ip {ip}");
-                }
+                BanHandler.RemoveBan(item, banType);
             }
         }
     }
