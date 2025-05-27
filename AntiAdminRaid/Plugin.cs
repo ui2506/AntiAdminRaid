@@ -1,15 +1,19 @@
 ﻿namespace AntiAdminRaid
 {
     using AntiAdminRaid.EventHandlers;
-    using Exiled.API.Features;
     using HarmonyLib;
+    using LabApi.Features.Wrappers;
+    using LabApi.Loader.Features.Plugins;
+    using System;
     using System.Collections.Generic;
 
     public class Plugin : Plugin<Config>
     {
-        public override string Prefix => "AntiAdminRaid";
         public override string Name => "AntiAdminRaid";
         public override string Author => "angelseraphim.";
+        public override string Description => "AntiAdminRaid";
+        public override Version Version => new Version(2, 0, 0);
+        public override Version RequiredApiVersion => new Version(1, 0, 2);
 
         internal static readonly Dictionary<Player, int> AdminBanCount = new Dictionary<Player, int>();
         internal static readonly Dictionary<Player, List<string>> PlayerUserId = new Dictionary<Player, List<string>>();
@@ -18,38 +22,31 @@
         internal static Config config;
 
         private PlayerEvents playerEvents;
+        private ServerEvents serverEvents;
         private Harmony harmony;
 
-        public override void OnEnabled()
+        public override void Enable()
         {
             config = Config;
             harmony = new Harmony("AntiRaid");
             playerEvents = new PlayerEvents();
+            serverEvents = new ServerEvents();
 
             harmony.PatchAll();
             playerEvents.Register();
-
-            base.OnEnabled();
+            serverEvents.Register();
         }
 
-        public override void OnDisabled ()
+        public override void Disable()
         {
             harmony.UnpatchAll();
             playerEvents.Unregister();
+            serverEvents.Unregister();
 
             config = null;
             harmony = null;
             playerEvents = null;
-
-            base.OnDisabled();
-        }
-
-        public override void OnReloaded()
-        {
-            OnDisabled();
-            OnEnabled();
-
-            base.OnReloaded();
+            serverEvents = null;
         }
 
         internal static void UpdatePlayerInfo(Dictionary<Player, List<string>> dict, Player player, string info)

@@ -1,6 +1,6 @@
 ﻿namespace AntiAdminRaid.EventHandlers
 {
-    using Exiled.Events.EventArgs.Player;
+    using LabApi.Events.Arguments.PlayerEvents;
     using MEC;
     using System.Collections.Generic;
 
@@ -8,58 +8,58 @@
     {
         internal void Register()
         {
-            Exiled.Events.Handlers.Player.Banning += OnBanning;
-            Exiled.Events.Handlers.Server.RestartingRound += OnRestartingRound;
+            LabApi.Events.Handlers.PlayerEvents.Banning += OnBanning;
+            LabApi.Events.Handlers.ServerEvents.RoundRestarted += OnRestartingRound;
         }
 
         internal void Unregister()
         {
-            Exiled.Events.Handlers.Player.Banning -= OnBanning;
-            Exiled.Events.Handlers.Server.RestartingRound -= OnRestartingRound;
+            LabApi.Events.Handlers.PlayerEvents.Banning -= OnBanning;
+            LabApi.Events.Handlers.ServerEvents.RoundRestarted -= OnRestartingRound;
         }
 
         private void OnRestartingRound() => Plugin.AdminBanCount.Clear();
 
-        private void OnBanning(BanningEventArgs ev)
+        private void OnBanning(PlayerBanningEventArgs ev)
         {
-            if (ev.Player.IsHost || ev.Player.IsNPC || ev.Player == null)
+            if (ev.Issuer.IsHost || ev.Issuer.IsDummy || ev.Issuer == null)
                 return;
 
-            if (!Plugin.AdminBanCount.ContainsKey(ev.Player))
-                Plugin.AdminBanCount.Add(ev.Player, 0);
+            if (!Plugin.AdminBanCount.ContainsKey(ev.Issuer))
+                Plugin.AdminBanCount.Add(ev.Issuer, 0);
 
-            Plugin.AdminBanCount[ev.Player]++;
+            Plugin.AdminBanCount[ev.Issuer]++;
 
-            if (Plugin.AdminBanCount[ev.Player] >= Plugin.config.BanCount)
+            if (Plugin.AdminBanCount[ev.Issuer] >= Plugin.config.BanCount)
             {
                 if (Plugin.config.UnBanPlayers)
                 {
-                    if (Plugin.PlayerIpAdress.TryGetValue(ev.Player, out List<string> ipList))
+                    if (Plugin.PlayerIpAdress.TryGetValue(ev.Issuer, out List<string> ipList))
                     {
                         Plugin.UnbanPlayers(ipList, BanHandler.BanType.IP);
                     }
 
-                    if (Plugin.PlayerUserId.TryGetValue(ev.Player, out List<string> idList))
+                    if (Plugin.PlayerUserId.TryGetValue(ev.Issuer, out List<string> idList))
                     {
                         Plugin.UnbanPlayers(idList, BanHandler.BanType.UserId);
                     }
                 }
 
-                ev.Player.Ban(Plugin.config.RaiderBanDuration * 86400, Plugin.config.RaidReason);
+                ev.Issuer.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
 
                 Webhook.SendWebhook(
                     Plugin.config.WebHook,
                     Plugin.config.WebHookText
-                        .Replace("%nick%", ev.Player.Nickname)
-                        .Replace("%steam%", ev.Player.UserId)
-                        .Replace("%ip%", ev.Player.IPAddress)
+                        .Replace("%nick%", ev.Issuer.Nickname)
+                        .Replace("%steam%", ev.Issuer.UserId)
+                        .Replace("%ip%", ev.Issuer.IpAddress)
                 );
             }
 
-            Plugin.UpdatePlayerInfo(Plugin.PlayerUserId, ev.Player, ev.Target.UserId);
-            Plugin.UpdatePlayerInfo(Plugin.PlayerIpAdress, ev.Player, ev.Target.IPAddress);
+            Plugin.UpdatePlayerInfo(Plugin.PlayerUserId, ev.Player, ev.Player.UserId);
+            Plugin.UpdatePlayerInfo(Plugin.PlayerIpAdress, ev.Player, ev.Player.IpAddress);
 
-            Timing.CallDelayed(Plugin.config.BanCountKD, () => Plugin.AdminBanCount[ev.Player]--);
+            Timing.CallDelayed(Plugin.config.BanCountKD, () => Plugin.AdminBanCount[ev.Issuer]--);
         }
     }
 }

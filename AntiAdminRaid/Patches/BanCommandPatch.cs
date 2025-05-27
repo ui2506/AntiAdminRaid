@@ -2,8 +2,8 @@
 {
     using CommandSystem;
     using CommandSystem.Commands.RemoteAdmin;
-    using Exiled.API.Features;
     using HarmonyLib;
+    using LabApi.Features.Wrappers;
     using RemoteAdmin;
     using System;
     using System.Collections.Generic;
@@ -35,8 +35,8 @@
 
             if (list.Count > Plugin.config.SimultaneousBansCount)
             {
-                Webhook.SendWebhook(Plugin.config.WebHook, Plugin.config.WebHookText.Replace("%nick%", player.Nickname).Replace("%steam%", player.UserId).Replace("%ip%", player.IPAddress));
-                player.Ban(Plugin.config.RaiderBanDuration * 86400, Plugin.config.RaidReason);
+                Webhook.SendWebhook(Plugin.config.WebHook, Plugin.config.WebHookText.Replace("%nick%", player.Nickname).Replace("%steam%", player.UserId).Replace("%ip%", player.IpAddress));
+                player.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
 
                 response = null;
                 __result = false;

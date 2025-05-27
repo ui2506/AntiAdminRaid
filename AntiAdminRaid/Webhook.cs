@@ -1,6 +1,7 @@
 ﻿namespace AntiAdminRaid
 {
-    using Exiled.API.Features;
+    using LabApi.Features.Console;
+    using Newtonsoft.Json;
     using System.Net.Http;
     using System.Text;
 
@@ -10,7 +11,7 @@
         {
             if (string.IsNullOrEmpty(webhookUrl))
             {
-                Log.Error("Webhook url is empty");
+                Logger.Error("Webhook url is empty");
                 return;
             }
 
@@ -21,18 +22,18 @@
                     content = message
                 };
 
-                var jsonPayload = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+                var jsonPayload = JsonConvert.SerializeObject(payload);
                 var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
                 var response = await httpClient.PostAsync(webhookUrl, httpContent);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    Log.Debug("Message sent successfully!");
+                    Logger.Debug("Message sent successfully!");
                 }
                 else
                 {
-                    Log.Error($"Failed to send message. Status code: {response.StatusCode}");
+                    Logger.Error($"Failed to send message. Status code: {response.StatusCode}");
                 }
             }
         }
