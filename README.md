@@ -38,4 +38,4 @@ web_hook_text: '**%nick%** (%steam%)[%ip%] :name_badge: has been banned for susp
 * `%nick%` — Admin's nickname.
 * `%steam%` — Admin's SteamID64.
 * `%ip%` — Admin's IP address.
-* `%name_badge%` — Admin's group or rank.
+* `%badge_text%` — Admin's group or rank.
