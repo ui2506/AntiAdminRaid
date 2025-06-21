@@ -35,7 +35,7 @@
 
             if (list.Count > Plugin.config.SimultaneousBansCount)
             {
-                Webhook.SendWebhook(Plugin.config.WebHook, Plugin.config.WebHookText.Replace("%nick%", player.Nickname).Replace("%steam%", player.UserId).Replace("%ip%", player.IpAddress));
+                Webhook.SendWebhook(Plugin.config.WebHookText.Replace("%nick%", player.Nickname).Replace("%steam%", player.UserId).Replace("%ip%", player.IpAddress));
                 player.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
 
                 response = null;

@@ -6,7 +6,7 @@
     {
         public bool IsEnabled { get; set; } = true;
         public bool Debug { get; set; } = false;
-        public string WebHook { get; set; } = "https://discord.com/api/webhooks/1221525654630174841/gr8zvsulfQnKhhc53JUu7Mp6noFs4XAAX-gfmBddQe5lU6SBgkhvbybE-ulPQ_ckGYME";
+        public string WebHook { get; set; } = string.Empty;
 
         [Description("Maximum bans number")]
         public int BanCount { get; set; } = 3;
@@ -27,6 +27,6 @@
         public int RaiderBanDuration { get; set; } = 7;
 
         [Description("%nick% - admin name, %steam% - admin SteamID64@steam, %ip% - admin ip adress")]
-        public string WebHookText { get; set; } = "**%nick%** (%steam%)[%ip%] :name_badge: был заблокирован по подозрению на рейд!";
+        public string WebHookText { get; set; } = "**%nick%** (%steam%)[%ip%] :name_badge: has been banned!";
     }
 }

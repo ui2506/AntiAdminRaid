@@ -12,7 +12,7 @@
         public override string Name => "AntiAdminRaid";
         public override string Author => "angelseraphim.";
         public override string Description => "AntiAdminRaid";
-        public override Version Version => new Version(2, 0, 0);
+        public override Version Version => new Version(2, 1, 0);
         public override Version RequiredApiVersion => new Version(1, 0, 2);
 
         internal static readonly Dictionary<Player, int> AdminBanCount = new Dictionary<Player, int>();
@@ -28,7 +28,7 @@
         public override void Enable()
         {
             config = Config;
-            harmony = new Harmony("AntiRaid");
+            harmony = new Harmony(Name);
             playerEvents = new PlayerEvents();
             serverEvents = new ServerEvents();
 
@@ -57,7 +57,7 @@
             dict[player].Add(info);
         }
 
-        internal static void UnbanPlayers(List<string> list, BanHandler.BanType banType)
+        internal static void UnbanPlayers(IEnumerable<string> list, BanHandler.BanType banType)
         {
             foreach (string item in list)
             {
