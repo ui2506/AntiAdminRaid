@@ -1,9 +1,9 @@
-﻿namespace AntiAdminRaid.EventHandlers
-{
-    using LabApi.Events.Arguments.PlayerEvents;
-    using MEC;
-    using System.Collections.Generic;
+﻿using LabApi.Events.Arguments.PlayerEvents;
+using MEC;
+using System.Collections.Generic;
 
+namespace AntiAdminRaid.EventHandlers
+{
     internal class PlayerEvents
     {
         internal void Register()
@@ -36,28 +36,22 @@
                 {
                     if (Plugin.PlayerIpAdress.TryGetValue(ev.Issuer, out List<string> ipList))
                     {
-                        Plugin.UnbanPlayers(ipList, BanHandler.BanType.IP);
+                        Extensions.UnbanPlayers(ipList, BanHandler.BanType.IP);
                     }
 
                     if (Plugin.PlayerUserId.TryGetValue(ev.Issuer, out List<string> idList))
                     {
-                        Plugin.UnbanPlayers(idList, BanHandler.BanType.UserId);
+                        Extensions.UnbanPlayers(idList, BanHandler.BanType.UserId);
                     }
                 }
 
                 ev.Issuer.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
 
-                Webhook.SendWebhook(
-                    Plugin.config.WebHook,
-                    Plugin.config.WebHookText
-                        .Replace("%nick%", ev.Issuer.Nickname)
-                        .Replace("%steam%", ev.Issuer.UserId)
-                        .Replace("%ip%", ev.Issuer.IpAddress)
-                );
+                Webhook.Send(Plugin.config.WebHookText.ValidateText(ev.Issuer));
             }
 
-            Plugin.UpdatePlayerInfo(Plugin.PlayerUserId, ev.Player, ev.Player.UserId);
-            Plugin.UpdatePlayerInfo(Plugin.PlayerIpAdress, ev.Player, ev.Player.IpAddress);
+            Extensions.UpdatePlayerInfo(Plugin.PlayerUserId, ev.Issuer, ev.Player.UserId);
+            Extensions.UpdatePlayerInfo(Plugin.PlayerIpAdress, ev.Issuer, ev.Player.IpAddress);
 
             Timing.CallDelayed(Plugin.config.BanCountKD, () => Plugin.AdminBanCount[ev.Issuer]--);
         }

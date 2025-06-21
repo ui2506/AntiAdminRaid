@@ -1,10 +1,9 @@
-﻿namespace AntiAdminRaid
-{
-    using System.ComponentModel;
+﻿using System.ComponentModel;
 
+namespace AntiAdminRaid
+{
     public class Config
     {
-        public bool IsEnabled { get; set; } = true;
         public bool Debug { get; set; } = false;
         public string WebHook { get; set; } = string.Empty;
 

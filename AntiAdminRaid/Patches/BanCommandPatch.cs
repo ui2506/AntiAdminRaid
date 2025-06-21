@@ -1,14 +1,14 @@
-﻿namespace AntiAdminRaid.Patches
-{
-    using CommandSystem;
-    using CommandSystem.Commands.RemoteAdmin;
-    using HarmonyLib;
-    using LabApi.Features.Wrappers;
-    using RemoteAdmin;
-    using System;
-    using System.Collections.Generic;
-    using Utils;
+﻿using CommandSystem;
+using CommandSystem.Commands.RemoteAdmin;
+using HarmonyLib;
+using LabApi.Features.Wrappers;
+using RemoteAdmin;
+using System;
+using System.Collections.Generic;
+using Utils;
 
+namespace AntiAdminRaid.Patches
+{
     [HarmonyPatch(typeof(BanCommand), nameof(BanCommand.Execute))]
 
     internal static class BanCommandPatch
@@ -35,7 +35,7 @@
 
             if (list.Count > Plugin.config.SimultaneousBansCount)
             {
-                Webhook.SendWebhook(Plugin.config.WebHookText.Replace("%nick%", player.Nickname).Replace("%steam%", player.UserId).Replace("%ip%", player.IpAddress));
+                Webhook.Send(Plugin.config.WebHookText.ValidateText(player));
                 player.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
 
                 response = null;

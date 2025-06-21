@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="EventHandlers\PlayerEvents.cs" />
     <Compile Include="EventHandlers\ServerEvents.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Patches\BanCommandPatch.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Webhook.cs" />

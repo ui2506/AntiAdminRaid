@@ -1,12 +1,12 @@
-﻿namespace AntiAdminRaid
-{
-    using AntiAdminRaid.EventHandlers;
-    using HarmonyLib;
-    using LabApi.Features.Wrappers;
-    using LabApi.Loader.Features.Plugins;
-    using System;
-    using System.Collections.Generic;
+﻿using AntiAdminRaid.EventHandlers;
+using HarmonyLib;
+using LabApi.Features.Wrappers;
+using LabApi.Loader.Features.Plugins;
+using System;
+using System.Collections.Generic;
 
+namespace AntiAdminRaid
+{
     public class Plugin : Plugin<Config>
     {
         public override string Name => "AntiAdminRaid";
@@ -47,22 +47,6 @@
             harmony = null;
             playerEvents = null;
             serverEvents = null;
-        }
-
-        internal static void UpdatePlayerInfo(Dictionary<Player, List<string>> dict, Player player, string info)
-        {
-            if (!dict.ContainsKey(player))
-                dict[player] = new List<string>();
-
-            dict[player].Add(info);
-        }
-
-        internal static void UnbanPlayers(IEnumerable<string> list, BanHandler.BanType banType)
-        {
-            foreach (string item in list)
-            {
-                BanHandler.RemoveBan(item, banType);
-            }
         }
     }
 }

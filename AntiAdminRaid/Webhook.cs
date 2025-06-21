@@ -1,13 +1,13 @@
-﻿namespace AntiAdminRaid
-{
-    using LabApi.Features.Console;
-    using System.Net.Http;
-    using System.Text;
-    using Utf8Json;
+﻿using LabApi.Features.Console;
+using System.Net.Http;
+using System.Text;
+using Utf8Json;
 
+namespace AntiAdminRaid
+{
     internal static class Webhook
     {
-        internal static async void SendWebhook(string message)
+        internal static async void Send(string message)
         {
             if (string.IsNullOrEmpty(Plugin.config.WebHook))
             {
