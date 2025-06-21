@@ -1,5 +1,9 @@
 # AntiAdminRaid
 
+![SCP:SL Plugin](https://img.shields.io/badge/SCP--SL%20Plugin-blue?style=for-the-badge)
+![Language](https://img.shields.io/badge/Language-C%23-blueviolet?style=for-the-badge)
+![Downloads](https://img.shields.io/github/downloads/angelseraphim/AntiAdminRaid/total?label=Downloads&color=333333&style=for-the-badge)
+
 ---
 **AntiAdminRaid** is a plugin for SCP: Secret Laboratory using **LabApi**, designed to automatically prevent mass banning raids by rogue administrators.
 ---
