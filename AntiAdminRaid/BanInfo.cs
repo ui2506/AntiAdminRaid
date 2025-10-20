@@ -35,23 +35,23 @@ namespace AntiAdminRaid
                 BannedIps.Add(ip);
         }
 
-        internal void AddBan(string targetId)
-        {
-            BannedTime.Add(Time.time + Plugin.config.BanCountKD);
+        //internal void AddBan(string targetId)
+        //{
+        //    BannedTime.Add(Time.time + Plugin.config.BanCountKD);
 
-            bool isIp = Misc.ValidateIpOrHostname(targetId, out Misc.IPAddressType _, false, false);
+        //    bool isIp = Misc.ValidateIpOrHostname(targetId, out Misc.IPAddressType _, false, false);
 
-            if (isIp)
-            {
-                if (!BannedIps.Contains(targetId))
-                    BannedIps.Add(targetId);
-            }
-            else
-            {
-                if (BannedUserIds.Contains(targetId))
-                    BannedUserIds.Add(targetId);
-            }
-        }
+        //    if (isIp)
+        //    {
+        //        if (!BannedIps.Contains(targetId))
+        //            BannedIps.Add(targetId);
+        //    }
+        //    else
+        //    {
+        //        if (BannedUserIds.Contains(targetId))
+        //            BannedUserIds.Add(targetId);
+        //    }
+        //}
 
         internal void UnbanAll()
         {
