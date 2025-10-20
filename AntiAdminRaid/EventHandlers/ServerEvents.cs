@@ -6,6 +6,6 @@
         
         internal void Unregister() => LabApi.Events.Handlers.ServerEvents.RoundRestarted -= OnRestartingRound;
 
-        private void OnRestartingRound() => Plugin.AdminBanCount.Clear();
+        private void OnRestartingRound() => Plugin.BanInfo.Clear();
     }
 }

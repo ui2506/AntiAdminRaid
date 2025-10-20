@@ -10,14 +10,13 @@ namespace AntiAdminRaid
     public class Plugin : Plugin<Config>
     {
         public override string Name => "AntiAdminRaid";
-        public override string Author => "angelseraphim.";
+        public override string Author => "ui_2506";
         public override string Description => "AntiAdminRaid";
-        public override Version Version => new Version(2, 1, 0);
+        public override Version Version => new Version(2, 2, 0);
         public override Version RequiredApiVersion => new Version(1, 0, 2);
 
-        internal static readonly Dictionary<Player, int> AdminBanCount = new Dictionary<Player, int>();
-        internal static readonly Dictionary<Player, List<string>> PlayerUserId = new Dictionary<Player, List<string>>();
-        internal static readonly Dictionary<Player, List<string>> PlayerIpAdress = new Dictionary<Player, List<string>>();
+        internal static readonly string[] SudoCommandsBlackList = new string[] { "stop", "exit" };
+        internal static readonly Dictionary<Player, BanInfo> BanInfo = new Dictionary<Player, BanInfo>();
 
         internal static Config config;
 

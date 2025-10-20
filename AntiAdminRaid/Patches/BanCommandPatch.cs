@@ -5,17 +5,17 @@ using LabApi.Features.Wrappers;
 using RemoteAdmin;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Utils;
 
 namespace AntiAdminRaid.Patches
 {
     [HarmonyPatch(typeof(BanCommand), nameof(BanCommand.Execute))]
-
     internal static class BanCommandPatch
     {
         private static bool Prefix(BanCommand __instance, ArraySegment<string> arguments, ICommandSender sender, out string response, ref bool __result)
         {
-            if (arguments.At(0) == null)
+            if (!arguments.Any())
             {
                 response = null;
                 return true;

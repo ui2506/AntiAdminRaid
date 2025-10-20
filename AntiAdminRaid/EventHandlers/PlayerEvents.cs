@@ -1,6 +1,4 @@
 ﻿using LabApi.Events.Arguments.PlayerEvents;
-using MEC;
-using System.Collections.Generic;
 
 namespace AntiAdminRaid.EventHandlers
 {
@@ -18,42 +16,33 @@ namespace AntiAdminRaid.EventHandlers
             LabApi.Events.Handlers.ServerEvents.RoundRestarted -= OnRestartingRound;
         }
 
-        private void OnRestartingRound() => Plugin.AdminBanCount.Clear();
+        private void OnRestartingRound() => Plugin.BanInfo.Clear();
 
         private void OnBanning(PlayerBanningEventArgs ev)
         {
             if (ev.Issuer.IsHost || ev.Issuer.IsDummy || ev.Issuer == null)
                 return;
 
-            if (!Plugin.AdminBanCount.ContainsKey(ev.Issuer))
-                Plugin.AdminBanCount.Add(ev.Issuer, 0);
-
-            Plugin.AdminBanCount[ev.Issuer]++;
-
-            if (Plugin.AdminBanCount[ev.Issuer] >= Plugin.config.BanCount)
+            if (!Plugin.BanInfo.TryGetValue(ev.Issuer, out BanInfo info))
             {
-                if (Plugin.config.UnBanPlayers)
-                {
-                    if (Plugin.PlayerIpAdress.TryGetValue(ev.Issuer, out List<string> ipList))
-                    {
-                        Extensions.UnbanPlayers(ipList, BanHandler.BanType.IP);
-                    }
-
-                    if (Plugin.PlayerUserId.TryGetValue(ev.Issuer, out List<string> idList))
-                    {
-                        Extensions.UnbanPlayers(idList, BanHandler.BanType.UserId);
-                    }
-                }
-
-                ev.Issuer.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
-
-                Webhook.Send(Plugin.config.WebHookText.ValidateText(ev.Issuer));
+                info = new BanInfo();
+                Plugin.BanInfo[ev.Issuer] = info;
             }
 
-            Extensions.UpdatePlayerInfo(Plugin.PlayerUserId, ev.Issuer, ev.Player.UserId);
-            Extensions.UpdatePlayerInfo(Plugin.PlayerIpAdress, ev.Issuer, ev.Player.IpAddress);
+            if (info.BanCount >= Plugin.config.BanCount)
+            {
+                if (Plugin.config.UnBanPlayers)
+                    info.UnbanAll();
 
-            Timing.CallDelayed(Plugin.config.BanCountKD, () => Plugin.AdminBanCount[ev.Issuer]--);
+                Webhook.Send(Plugin.config.WebHookText.ValidateText(ev.Issuer));
+
+                ev.Issuer.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
+                ev.IsAllowed = false;
+
+                return;
+            }
+
+            info.AddBan(ev.Player.UserId, ev.Player.IpAddress);
         }
     }
 }
