@@ -4,7 +4,6 @@ namespace AntiAdminRaid
 {
     public class Config
     {
-        public bool Debug { get; set; } = false;
         public string WebHook { get; set; } = string.Empty;
 
         [Description("Maximum bans number")]
@@ -24,6 +23,9 @@ namespace AntiAdminRaid
 
         [Description("Raider ban duration (in days)")]
         public int RaiderBanDuration { get; set; } = 7;
+
+        [Description("Groups to be ignored")]
+        public string[] IgnoredGroups { get; set; } = new string[] { "owner" };
 
         [Description("%nick% - admin name, %steam% - admin SteamID64@steam, %ip% - admin ip adress")]
         public string WebHookText { get; set; } = "**%nick%** (%steam%)[%ip%] :name_badge: has been banned!";

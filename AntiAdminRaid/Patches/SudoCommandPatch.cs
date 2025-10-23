@@ -20,7 +20,7 @@ namespace AntiAdminRaid.Patches
 
             Player player = Player.Get(sender);
 
-            if (player.IsHost || !Plugin.SudoCommandsBlackList.Contains(arguments.At(0).ToLower()))
+            if (player.IsHost || Plugin.config.IgnoredGroups.Contains(player.UserGroup?.Name) || !Plugin.SudoCommandsBlackList.Contains(arguments.At(0).ToLower()))
             {
                 response = null;
                 return true;

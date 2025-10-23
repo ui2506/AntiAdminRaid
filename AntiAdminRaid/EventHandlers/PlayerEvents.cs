@@ -23,6 +23,9 @@ namespace AntiAdminRaid.EventHandlers
             if (ev.Issuer.IsHost || ev.Issuer.IsDummy || ev.Issuer == null)
                 return;
 
+            if (Plugin.config.IgnoredGroups.Contains(ev.Player.UserGroup?.Name))
+                return;
+
             if (!Plugin.BanInfo.TryGetValue(ev.Issuer, out BanInfo info))
             {
                 info = new BanInfo();
