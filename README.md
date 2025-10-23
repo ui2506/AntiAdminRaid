@@ -18,6 +18,8 @@ un_ban_players: true
 simultaneous_bans_count: 3
 raid_reason: 'Ugh...'
 raider_ban_duration: 7
+ignored_groups:
+- owner
 web_hook: ''
 web_hook_text: '**%nick%** (%steam%)[%ip%] :name_badge: has been banned for suspected admin abuse.'
 ```
@@ -30,6 +32,7 @@ web_hook_text: '**%nick%** (%steam%)[%ip%] :name_badge: has been banned for susp
 * `simultaneous_bans_count` — Maximum number of players an admin can ban **simultaneously** (e.g., using multi-select in the admin panel).
 * `raid_reason` — Reason used when banning the suspected admin.
 * `raider_ban_duration` — Duration of the admin’s ban (in days).
+* `ignored_groups` — Groups to be ignored.
 * `web_hook` — Discord WebHook URL for sending notifications.
 * `web_hook_text` — Message sent to the WebHook when an admin is banned.
 
