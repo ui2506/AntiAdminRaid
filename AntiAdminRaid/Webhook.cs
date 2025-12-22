@@ -1,13 +1,14 @@
 ﻿using LabApi.Features.Console;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Utf8Json;
 
 namespace AntiAdminRaid
 {
     internal static class Webhook
     {
-        internal static async void Send(string message)
+        internal static async Task Send(string message)
         {
             if (string.IsNullOrEmpty(Plugin.config.WebHook))
             {
@@ -30,7 +31,7 @@ namespace AntiAdminRaid
 
                 if (response.IsSuccessStatusCode)
                 {
-                    Logger.Debug("Message sent successfully!");
+                    Logger.Debug("Message sent successfully!", Plugin.config.Debug);
                 }
                 else
                 {

@@ -6,6 +6,7 @@ using RemoteAdmin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Utils;
 
 namespace AntiAdminRaid.Patches
@@ -13,7 +14,7 @@ namespace AntiAdminRaid.Patches
     [HarmonyPatch(typeof(BanCommand), nameof(BanCommand.Execute))]
     internal static class BanCommandPatch
     {
-        private static bool Prefix(BanCommand __instance, ArraySegment<string> arguments, ICommandSender sender, out string response, ref bool __result)
+        private static bool Prefix(ArraySegment<string> arguments, ICommandSender sender, out string response, ref bool __result)
         {
             if (!arguments.Any())
             {
@@ -35,8 +36,9 @@ namespace AntiAdminRaid.Patches
 
             if (list.Count > Plugin.config.SimultaneousBansCount)
             {
-                Webhook.Send(Plugin.config.WebHookText.ValidateText(player));
                 player.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
+
+                Task.Run(() => Webhook.Send(Plugin.config.WebHookText.ValidateText(player)));
 
                 response = null;
                 __result = false;

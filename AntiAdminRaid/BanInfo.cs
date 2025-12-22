@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using static BanHandler;
 
@@ -7,10 +6,19 @@ namespace AntiAdminRaid
 {
     internal class BanInfo
     {
-        internal int BanCount { 
+        internal ushort BanCount 
+        { 
             get
             {
-                return BannedTime.Count(x => x - Time.time > 0);
+                ushort count = 0;
+
+                for (ushort i = 0; i < BannedTime.Count; i++)
+                {
+                    if (BannedTime[i] - Time.time > 0)
+                        count++;
+                }
+
+                return count;
             }
         }
         internal List<string> BannedUserIds { get; private set; }
@@ -34,24 +42,6 @@ namespace AntiAdminRaid
             if (!BannedIps.Contains(ip))
                 BannedIps.Add(ip);
         }
-
-        //internal void AddBan(string targetId)
-        //{
-        //    BannedTime.Add(Time.time + Plugin.config.BanCountKD);
-
-        //    bool isIp = Misc.ValidateIpOrHostname(targetId, out Misc.IPAddressType _, false, false);
-
-        //    if (isIp)
-        //    {
-        //        if (!BannedIps.Contains(targetId))
-        //            BannedIps.Add(targetId);
-        //    }
-        //    else
-        //    {
-        //        if (BannedUserIds.Contains(targetId))
-        //            BannedUserIds.Add(targetId);
-        //    }
-        //}
 
         internal void UnbanAll()
         {

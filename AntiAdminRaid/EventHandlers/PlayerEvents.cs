@@ -1,4 +1,5 @@
 ﻿using LabApi.Events.Arguments.PlayerEvents;
+using System.Threading.Tasks;
 
 namespace AntiAdminRaid.EventHandlers
 {
@@ -7,20 +8,20 @@ namespace AntiAdminRaid.EventHandlers
         internal void Register()
         {
             LabApi.Events.Handlers.PlayerEvents.Banning += OnBanning;
-            LabApi.Events.Handlers.ServerEvents.RoundRestarted += OnRestartingRound;
+            LabApi.Events.Handlers.ServerEvents.RoundRestarted += OnRoundRestarted;
         }
 
         internal void Unregister()
         {
             LabApi.Events.Handlers.PlayerEvents.Banning -= OnBanning;
-            LabApi.Events.Handlers.ServerEvents.RoundRestarted -= OnRestartingRound;
+            LabApi.Events.Handlers.ServerEvents.RoundRestarted -= OnRoundRestarted;
         }
 
-        private void OnRestartingRound() => Plugin.BanInfo.Clear();
+        private void OnRoundRestarted() => Plugin.BanInfo.Clear();
 
         private void OnBanning(PlayerBanningEventArgs ev)
         {
-            if (ev.Issuer.IsHost || ev.Issuer.IsDummy || ev.Issuer == null)
+            if (ev.Issuer.IsHost || ev.Issuer.IsDummy)
                 return;
 
             if (Plugin.config.IgnoredGroups.Contains(ev.Player.UserGroup?.Name))
@@ -37,7 +38,7 @@ namespace AntiAdminRaid.EventHandlers
                 if (Plugin.config.UnBanPlayers)
                     info.UnbanAll();
 
-                Webhook.Send(Plugin.config.WebHookText.ValidateText(ev.Issuer));
+                Task.Run(() => Webhook.Send(Plugin.config.WebHookText.ValidateText(ev.Issuer)));
 
                 ev.Issuer.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
                 ev.IsAllowed = false;

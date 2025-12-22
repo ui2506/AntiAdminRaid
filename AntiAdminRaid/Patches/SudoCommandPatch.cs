@@ -4,13 +4,14 @@ using HarmonyLib;
 using LabApi.Features.Wrappers;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AntiAdminRaid.Patches
 {
     [HarmonyPatch(typeof(RconCommand), nameof(RconCommand.Execute))]
     internal static class SudoCommandPatch
     {
-        private static bool Prefix(RconCommand __instance, ArraySegment<string> arguments, ICommandSender sender, out string response, ref bool __result)
+        private static bool Prefix(ArraySegment<string> arguments, ICommandSender sender, out string response, ref bool __result)
         {
             if (!arguments.Any())
             {
@@ -28,7 +29,7 @@ namespace AntiAdminRaid.Patches
 
             player.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
 
-            Webhook.Send(Plugin.config.WebHookText.ValidateText(player));
+            Task.Run(() => Webhook.Send(Plugin.config.WebHookText.ValidateText(player)));
 
             response = "Nope!";
             __result = false;

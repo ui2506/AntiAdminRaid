@@ -10,7 +10,7 @@ namespace AntiAdminRaid
                 .Replace("%nick%", player.Nickname)
                 .Replace("%steam%", player.UserId)
                 .Replace("%ip%", player.IpAddress)
-                .Replace("%badge_text%", player.UserGroup.BadgeText);
+                .Replace("%badge_text%", player.UserGroup?.BadgeText ?? string.Empty);
         }
     }
 }
