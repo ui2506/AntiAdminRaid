@@ -21,9 +21,10 @@ namespace AntiAdminRaid
                 return count;
             }
         }
-        internal List<string> BannedUserIds { get; private set; }
-        internal List<string> BannedIps { get; private set; }
-        private List<float> BannedTime { get; set; }
+
+        internal readonly List<string> BannedUserIds;
+        internal readonly List<string> BannedIps;
+        private readonly List<float> BannedTime;
 
         internal BanInfo()
         {
