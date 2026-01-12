@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ui_2506 - ui-dream.com")]
 [assembly: AssemblyProduct("AntiAdminRaid")]
-[assembly: AssemblyCopyright("Copyright © 2024-2025")]
+[assembly: AssemblyCopyright("Copyright © 2024-2026")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
