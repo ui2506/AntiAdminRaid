@@ -5,19 +5,9 @@ namespace AntiAdminRaid.EventHandlers
 {
     internal sealed class PlayerEvents
     {
-        internal void Register()
-        {
-            LabApi.Events.Handlers.PlayerEvents.Banning += OnBanning;
-            LabApi.Events.Handlers.ServerEvents.RoundRestarted += OnRoundRestarted;
-        }
+        internal void Register() => LabApi.Events.Handlers.PlayerEvents.Banning += OnBanning;
 
-        internal void Unregister()
-        {
-            LabApi.Events.Handlers.PlayerEvents.Banning -= OnBanning;
-            LabApi.Events.Handlers.ServerEvents.RoundRestarted -= OnRoundRestarted;
-        }
-
-        private void OnRoundRestarted() => Plugin.BanInfo.Clear();
+        internal void Unregister() => LabApi.Events.Handlers.PlayerEvents.Banning -= OnBanning;
 
         private void OnBanning(PlayerBanningEventArgs ev)
         {
@@ -27,11 +17,7 @@ namespace AntiAdminRaid.EventHandlers
             if (Plugin.PLuginConfig.IgnoredGroups.Contains(ev.Player.UserGroup?.Name))
                 return;
 
-            if (!Plugin.BanInfo.TryGetValue(ev.Issuer, out BanInfo info))
-            {
-                info = new BanInfo();
-                Plugin.BanInfo[ev.Issuer] = info;
-            }
+            BanInfo.GetOrAdd(ev.Issuer, out BanInfo info);
 
             if (info.BanCount >= Plugin.PLuginConfig.BanCount)
             {

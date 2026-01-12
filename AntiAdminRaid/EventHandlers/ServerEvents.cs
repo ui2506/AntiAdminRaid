@@ -23,7 +23,7 @@ namespace AntiAdminRaid.EventHandlers
             LabApi.Events.Handlers.ServerEvents.CommandExecuting -= OnCommandExecuting;
         }
 
-        private void OnRestartingRound() => Plugin.BanInfo.Clear();
+        private void OnRestartingRound() => BanInfo.Cache.Clear();
 
         private void OnCommandExecuting(CommandExecutingEventArgs ev)
         {

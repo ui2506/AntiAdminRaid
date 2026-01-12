@@ -1,8 +1,6 @@
 ﻿using AntiAdminRaid.EventHandlers;
-using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Plugins;
 using System;
-using System.Collections.Generic;
 
 namespace AntiAdminRaid
 {
@@ -15,7 +13,6 @@ namespace AntiAdminRaid
         public override Version RequiredApiVersion { get; } = new Version(1, 1, 4);
 
         internal static readonly string[] SudoCommandsBlackList = new string[] { "stop", "exit" };
-        internal static readonly Dictionary<Player, BanInfo> BanInfo = new Dictionary<Player, BanInfo>();
 
         internal static Config PLuginConfig { get; private set; }
 

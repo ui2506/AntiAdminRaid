@@ -1,11 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using AntiAdminRaid.Events.Arguments;
+using LabApi.Features.Wrappers;
+using System.Collections.Generic;
 using UnityEngine;
 using static BanHandler;
 
 namespace AntiAdminRaid
 {
-    internal sealed class BanInfo
+    public sealed class BanInfo
     {
+        internal static readonly Dictionary<Player, BanInfo> Cache = new Dictionary<Player, BanInfo>();
+
+        public Player Issuer { get; private set; }
+        public List<string> BannedUserIds { get; private set; }
+        public List<string> BannedIps { get; private set; }
+        public List<float> BannedTime { get; private set; }
+
         internal ushort BanCount 
         { 
             get
@@ -22,15 +31,18 @@ namespace AntiAdminRaid
             }
         }
 
-        internal readonly List<string> BannedUserIds;
-        internal readonly List<string> BannedIps;
-        private readonly List<float> BannedTime;
-
-        internal BanInfo()
+        internal static void GetOrAdd(Player issuer, out BanInfo info)
         {
-            BannedUserIds = new List<string>();
-            BannedIps = new List<string>();
-            BannedTime = new List<float>();
+            if (Cache.TryGetValue(issuer, out info))
+                return;
+
+            info = new BanInfo
+            {
+                Issuer = issuer,
+                BannedUserIds = new List<string>(),
+                BannedIps = new List<string>(),
+                BannedTime = new List<float>(),
+            };
         }
 
         internal void AddBan(string userId, string ip)
@@ -47,10 +59,20 @@ namespace AntiAdminRaid
         internal void UnbanAll()
         {
             foreach (string item in BannedUserIds)
-                RemoveBan(item, BanType.UserId);
+            {
+                UnbanningEventArgs ev = new UnbanningEventArgs(Issuer, item);
+
+                if (ev.IsAllowed)
+                    RemoveBan(item, BanType.UserId);
+            }
 
             foreach (string item in BannedIps)
-                RemoveBan(item, BanType.UserId);
+            {
+                UnbanningEventArgs ev = new UnbanningEventArgs(Issuer, item);
+
+                if (ev.IsAllowed)
+                    RemoveBan(item, BanType.IP);
+            }
         }
     }
 }

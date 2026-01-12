@@ -65,6 +65,8 @@
     <Compile Include="BanInfo.cs" />
     <Compile Include="EventHandlers\PlayerEvents.cs" />
     <Compile Include="EventHandlers\ServerEvents.cs" />
+    <Compile Include="Events\Arguments\UnbanningEventArgs.cs" />
+    <Compile Include="Events\Handlers.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Webhook.cs" />
