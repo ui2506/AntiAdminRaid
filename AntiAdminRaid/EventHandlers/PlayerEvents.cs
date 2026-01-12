@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace AntiAdminRaid.EventHandlers
 {
-    internal class PlayerEvents
+    internal sealed class PlayerEvents
     {
         internal void Register()
         {
@@ -24,7 +24,7 @@ namespace AntiAdminRaid.EventHandlers
             if (ev.Issuer.IsHost || ev.Issuer.IsDummy)
                 return;
 
-            if (Plugin.config.IgnoredGroups.Contains(ev.Player.UserGroup?.Name))
+            if (Plugin.PLuginConfig.IgnoredGroups.Contains(ev.Player.UserGroup?.Name))
                 return;
 
             if (!Plugin.BanInfo.TryGetValue(ev.Issuer, out BanInfo info))
@@ -33,14 +33,14 @@ namespace AntiAdminRaid.EventHandlers
                 Plugin.BanInfo[ev.Issuer] = info;
             }
 
-            if (info.BanCount >= Plugin.config.BanCount)
+            if (info.BanCount >= Plugin.PLuginConfig.BanCount)
             {
-                if (Plugin.config.UnBanPlayers)
+                if (Plugin.PLuginConfig.UnBanPlayers)
                     info.UnbanAll();
 
-                Task.Run(() => Webhook.Send(Plugin.config.WebHookText.ValidateText(ev.Issuer)));
+                Task.Run(() => Webhook.Send(Plugin.PLuginConfig.WebHookText.ValidateText(ev.Issuer)));
 
-                ev.Issuer.Ban(Plugin.config.RaidReason, Plugin.config.RaiderBanDuration * 86400);
+                ev.Issuer.Ban(Plugin.PLuginConfig.RaidReason, Plugin.PLuginConfig.RaiderBanDuration * 86400);
                 ev.IsAllowed = false;
 
                 return;

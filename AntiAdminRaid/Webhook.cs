@@ -10,7 +10,7 @@ namespace AntiAdminRaid
     {
         internal static async Task Send(string message)
         {
-            if (string.IsNullOrEmpty(Plugin.config.WebHook))
+            if (string.IsNullOrEmpty(Plugin.PLuginConfig.WebHook))
             {
                 Logger.Error("Webhook url is empty");
                 return;
@@ -27,11 +27,11 @@ namespace AntiAdminRaid
                 string jsonPayload = Encoding.UTF8.GetString(jsonBytes);
                 StringContent httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await httpClient.PostAsync(Plugin.config.WebHook, httpContent);
+                HttpResponseMessage response = await httpClient.PostAsync(Plugin.PLuginConfig.WebHook, httpContent);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    Logger.Debug("Message sent successfully!", Plugin.config.Debug);
+                    Logger.Debug("Message sent successfully!", Plugin.PLuginConfig.Debug);
                 }
                 else
                 {

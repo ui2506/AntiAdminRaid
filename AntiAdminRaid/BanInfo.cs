@@ -4,7 +4,7 @@ using static BanHandler;
 
 namespace AntiAdminRaid
 {
-    internal class BanInfo
+    internal sealed class BanInfo
     {
         internal ushort BanCount 
         { 
@@ -35,7 +35,7 @@ namespace AntiAdminRaid
 
         internal void AddBan(string userId, string ip)
         {
-            BannedTime.Add(Time.time + Plugin.config.BanCountKD);
+            BannedTime.Add(Time.time + Plugin.PLuginConfig.BanCountKD);
 
             if (BannedUserIds.Contains(userId))
                 BannedUserIds.Add(userId);

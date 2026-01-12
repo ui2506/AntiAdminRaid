@@ -2,7 +2,7 @@
 
 namespace AntiAdminRaid
 {
-    public class Config
+    public sealed class Config
     {
         [Description("Debug mode")]
         public bool Debug { get; set; } = false;
