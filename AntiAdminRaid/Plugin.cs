@@ -9,7 +9,7 @@ namespace AntiAdminRaid
         public override string Name { get; } = "AntiAdminRaid";
         public override string Author { get; } = "ui_2506";
         public override string Description { get; } = "AntiAdminRaid";
-        public override Version Version { get; } = new Version(2, 4, 0);
+        public override Version Version { get; } = new Version(2, 4, 1);
         public override Version RequiredApiVersion { get; } = new Version(1, 1, 4);
 
         internal static readonly string[] SudoCommandsBlackList = new string[] { "stop", "exit" };

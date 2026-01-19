@@ -6,14 +6,14 @@ using static BanHandler;
 
 namespace AntiAdminRaid
 {
-    public sealed class BanInfo
+    internal sealed class BanInfo
     {
         internal static readonly Dictionary<Player, BanInfo> Cache = new Dictionary<Player, BanInfo>();
 
-        public Player Issuer { get; private set; }
-        public List<string> BannedUserIds { get; private set; }
-        public List<string> BannedIps { get; private set; }
-        public List<float> BannedTime { get; private set; }
+        internal Player Issuer { get; private set; }
+        internal List<string> BannedUserIds { get; private set; }
+        internal List<string> BannedIps { get; private set; }
+        internal List<float> BannedTime { get; private set; }
 
         internal ushort BanCount 
         { 
@@ -43,6 +43,8 @@ namespace AntiAdminRaid
                 BannedIps = new List<string>(),
                 BannedTime = new List<float>(),
             };
+
+            Cache[issuer] = info;
         }
 
         internal void AddBan(string userId, string ip)
