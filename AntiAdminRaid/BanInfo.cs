@@ -47,15 +47,20 @@ namespace AntiAdminRaid
             Cache[issuer] = info;
         }
 
-        internal void AddBan(string userId, string ip)
+        internal void AddBan(string id, bool isIp = false)
         {
             BannedTime.Add(Time.time + Plugin.PLuginConfig.BanCountKD);
 
-            if (BannedUserIds.Contains(userId))
-                BannedUserIds.Add(userId);
-
-            if (!BannedIps.Contains(ip))
-                BannedIps.Add(ip);
+            if (isIp)
+            {
+                if (BannedUserIds.Contains(id))
+                    BannedUserIds.Add(id);
+            }
+            else
+            {
+                if (!BannedIps.Contains(id))
+                    BannedIps.Add(id);
+            }
         }
 
         internal void UnbanAll()

@@ -4,7 +4,6 @@ using LabApi.Features.Wrappers;
 using RemoteAdmin;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Utils;
 
 namespace AntiAdminRaid.EventHandlers
@@ -15,12 +14,48 @@ namespace AntiAdminRaid.EventHandlers
         {
             LabApi.Events.Handlers.ServerEvents.RoundRestarted += OnRestartingRound;
             LabApi.Events.Handlers.ServerEvents.CommandExecuting += OnCommandExecuting;
+            LabApi.Events.Handlers.ServerEvents.BanIssuing += OnBanIssuing;
         }
-        
+
         internal void Unregister()
         {
             LabApi.Events.Handlers.ServerEvents.RoundRestarted -= OnRestartingRound;
             LabApi.Events.Handlers.ServerEvents.CommandExecuting -= OnCommandExecuting;
+            LabApi.Events.Handlers.ServerEvents.BanIssuing -= OnBanIssuing;
+        }
+
+        private void OnBanIssuing(BanIssuingEventArgs ev)
+        {
+            string issuerId = ev.BanDetails.Issuer;
+
+            if (issuerId.Contains("("))
+                issuerId = ev.BanDetails.Issuer.Split('(')[1].Replace(")", "");
+
+            Player issuer = Player.Get(issuerId);
+
+            if (issuer == null || !issuer.IsPlayer)
+                return;
+
+            if (Plugin.PLuginConfig.IgnoredGroups.Contains(issuer.UserGroup?.Name))
+                return;
+
+            BanInfo.GetOrAdd(issuer, out BanInfo info);
+
+            if (info.BanCount >= Plugin.PLuginConfig.BanCount)
+            {
+                if (Plugin.PLuginConfig.UnBanPlayers)
+                    info.UnbanAll();
+
+                _ = Webhook.Send(Plugin.PLuginConfig.WebHookText.ValidateText(issuer));
+
+                issuer.Ban(Plugin.PLuginConfig.RaidReason, Plugin.PLuginConfig.RaiderBanDuration * 86400);
+
+                ev.IsAllowed = false;
+
+                return;
+            }
+
+            info.AddBan(ev.BanDetails.Id, ev.BanType == BanHandler.BanType.IP);
         }
 
         private void OnRestartingRound() => BanInfo.Cache.Clear();
@@ -50,7 +85,7 @@ namespace AntiAdminRaid.EventHandlers
 
                     player.Ban(Plugin.PLuginConfig.RaidReason, Plugin.PLuginConfig.RaiderBanDuration * 86400);
 
-                    Task.Run(() => Webhook.Send(Plugin.PLuginConfig.WebHookText.ValidateText(player)));
+                    _ = Webhook.Send(Plugin.PLuginConfig.WebHookText.ValidateText(player));
 
                     ev.IsAllowed = false;
 
@@ -62,7 +97,7 @@ namespace AntiAdminRaid.EventHandlers
 
                     player.Ban(Plugin.PLuginConfig.RaidReason, Plugin.PLuginConfig.RaiderBanDuration * 86400);
 
-                    Task.Run(() => Webhook.Send(Plugin.PLuginConfig.WebHookText.ValidateText(player)));
+                    _ = Webhook.Send(Plugin.PLuginConfig.WebHookText.ValidateText(player));
 
                     ev.IsAllowed = false;
 

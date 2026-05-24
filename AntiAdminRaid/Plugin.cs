@@ -16,27 +16,22 @@ namespace AntiAdminRaid
 
         internal static Config PLuginConfig { get; private set; }
 
-        private PlayerEvents playerEvents;
-        private ServerEvents serverEvents;
+        private ServerEvents _serverEvents;
 
         public override void Enable()
         {
             PLuginConfig = Config;
-            playerEvents = new PlayerEvents();
-            serverEvents = new ServerEvents();
+            _serverEvents = new ServerEvents();
 
-            playerEvents.Register();
-            serverEvents.Register();
+            _serverEvents.Register();
         }
 
         public override void Disable()
         {
-            playerEvents.Unregister();
-            serverEvents.Unregister();
+            _serverEvents.Unregister();
 
             PLuginConfig = null;
-            playerEvents = null;
-            serverEvents = null;
+            _serverEvents = null;
         }
     }
 }
